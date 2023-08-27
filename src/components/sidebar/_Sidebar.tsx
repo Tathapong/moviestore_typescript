@@ -24,6 +24,33 @@ function Sidebar({ onClose }: SidebarProps) {
   const [genres, setGenres] = useState<number[]>([]);
   const [genreList, setGenreList] = useState<GenreType[]>([]);
 
+  function onClickGenreChip(id: number) {
+    // const cloneGenres = [...genres];
+    // const idx = genres.findIndex((item) => item === id);
+    // if (idx !== -1) cloneGenres.splice(idx, 1);
+    // else cloneGenres.push(id);
+    // setGenres(cloneGenres);
+
+    const cloneGenre = [...context.genre];
+    const idx = context.genre.findIndex((item) => item === id);
+    if (idx !== -1) cloneGenre.splice(idx, 1);
+    else cloneGenre.push(id);
+    context.setGenre(cloneGenre);
+  }
+
+  useEffect(() => {
+    try {
+      const fetch = async () => {
+        const res = await getGenre();
+        const genreList = Array.from(res.data.genres);
+        setGenreList(genreList as GenreType[]);
+      };
+      fetch();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   return (
     <Box height={"100%"} p={1} sx={{ backgroundColor: alpha("#032541", 0.7) }}>
       <Box height={"56px"} display={"flex"} justifyContent={"flex-end"} mb={2}>
@@ -42,6 +69,29 @@ function Sidebar({ onClose }: SidebarProps) {
             }
           >
             <SearchInput search={search} setSearch={setSearch} />
+          </List>
+        </Paper>
+        <Paper elevation={3}>
+          <List
+            subheader={
+              <ListSubheader component={"div"} sx={{ backgroundColor: alpha("#0078D7", 0.5), color: "white" }}>
+                Genre
+              </ListSubheader>
+            }
+          >
+            <ListItem>
+              <Box display={"flex"} flexWrap={"wrap"} gap={1}>
+                {genreList.map((genre) => (
+                  <Chip
+                    key={genre.id}
+                    variant={context.genre.includes(genre.id) ? "filled" : "outlined"}
+                    color="success"
+                    label={genre.name}
+                    onClick={() => onClickGenreChip(genre.id)}
+                  />
+                ))}
+              </Box>
+            </ListItem>
           </List>
         </Paper>
       </Box>

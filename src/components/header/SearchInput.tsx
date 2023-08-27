@@ -1,6 +1,9 @@
+import React from "react";
+
 import { InputBase } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
+import useAllContext from "../../contexts/useAllContext";
 
 const Search = styled("div")(({ theme }) => ({
   marginBlock: 10,
@@ -45,12 +48,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchInput() {
+  const context = useAllContext();
+
+  function onChangeInput(ev: React.ChangeEvent<HTMLInputElement>) {
+    context.setSearch(ev.target.value);
+  }
+
   return (
     <Search>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
-      <StyledInputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} />
+      <StyledInputBase
+        placeholder="Search…"
+        inputProps={{ "aria-label": "search" }}
+        onChange={onChangeInput}
+        value={context.search}
+      />
     </Search>
   );
 }

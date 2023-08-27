@@ -1,36 +1,50 @@
-import { AppBar, Toolbar, Container, Box, IconButton } from "@mui/material";
+import { AppBar, Toolbar, Box, IconButton, Button, Badge, Menu, MenuItem } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import HomeIcon from "@mui/icons-material/Home";
+import CartMenu from "./CartMenu";
 
-interface HeaderProps {
-  sidebar: boolean;
-  openSidebar: () => void;
-}
+import { Mode, ModeType } from "../../constants/mode";
+import useAllContext from "../../contexts/useAllContext";
 
-function Header({ sidebar, openSidebar }: HeaderProps) {
+const modes: ModeType[] = [Mode.NOW_PLAYING, Mode.POPULAR, Mode.TOP_RATED, Mode.UPCOMING, Mode.SEARCH, Mode.CHECKOUT];
+
+function Header() {
+  const context = useAllContext();
+
+  function onClickMenu(mode: ModeType) {
+    context.setMode(mode);
+  }
+
   return (
-    <AppBar position="static" sx={{ boxShadow: "none", backgroundColor: "#032541" }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ display: "flex" }}>
-          <Box display={sidebar ? "none" : "block"}>
-            <IconButton onClick={openSidebar}>
-              <ChevronRightIcon sx={{ color: "white" }} />
-            </IconButton>
-          </Box>
-          <Box>
-            <IconButton>
-              <HomeIcon sx={{ color: "white" }} />
-            </IconButton>
-          </Box>
-          <Box flexGrow={1} display={{ xs: "none", sm: "block" }} />
-          <Box display={"flex"} alignItems={"center"}>
-            <IconButton>
+    <AppBar position="sticky" sx={{ boxShadow: "none", backgroundColor: "#032541", px: 8 }}>
+      <Toolbar disableGutters sx={{ display: "flex" }}>
+        <Box display={"flex"} gap={2}>
+          {modes.map((mode, index) => (
+            <Button
+              key={index}
+              size="small"
+              variant="text"
+              color={context.mode === mode ? "warning" : "info"}
+              onClick={() => onClickMenu(mode)}
+            >
+              {mode}
+            </Button>
+          ))}
+        </Box>
+        <Box flexGrow={1} display={{ xs: "none", sm: "block" }} />
+        <Box display={"flex"} alignItems={"center"}>
+          <IconButton>
+            <Badge badgeContent={context.cart.length} color="error">
               <ShoppingCartIcon sx={{ color: "white" }} />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </Container>
+            </Badge>
+          </IconButton>
+
+          {/* <Menu open>
+            <MenuItem>
+              <CartMenu />
+            </MenuItem>
+          </Menu> */}
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 }
