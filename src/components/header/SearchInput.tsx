@@ -1,6 +1,6 @@
 import React from "react";
 
-import { InputBase } from "@mui/material";
+import { InputBase, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import useAllContext from "../../contexts/useAllContext";
@@ -55,16 +55,18 @@ export default function SearchInput() {
   }
 
   return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        placeholder="Search…"
-        inputProps={{ "aria-label": "search" }}
-        onChange={onChangeInput}
-        value={context.search}
-      />
+    <Search sx={{ height: "100%" }}>
+      <Paper elevation={5} sx={{ backgroundColor: "lightskyblue" }}>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          placeholder="Search…"
+          inputProps={{ "aria-label": "search" }}
+          onChange={onChangeInput}
+          value={context.search}
+        />
+      </Paper>
     </Search>
   );
 }

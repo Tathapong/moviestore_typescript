@@ -3,6 +3,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import { MoviesType } from "../../interfaces/interface";
 
 import useAllContext from "../../contexts/useAllContext";
+import { setLocalStorage } from "../../utilities/localStorage";
 
 interface MovieCardProps {
   movie: MoviesType;
@@ -14,16 +15,17 @@ const noImage =
 function MovieCard({ movie }: MovieCardProps) {
   const context = useAllContext();
 
-  const isOnCart = context.cart.includes(movie.id);
+  const isOnCart = Boolean(context.cart.find((item) => item.id === movie.id));
 
   function onClickAddToCart() {
     const cloneCart = [...context.cart];
-    const idx = cloneCart.indexOf(movie.id);
+    const idx = cloneCart.findIndex((item) => item.id === movie.id);
 
     if (idx !== -1) cloneCart.splice(idx, 1);
-    else cloneCart.push(movie.id);
+    else cloneCart.push(movie);
 
     context.setCart(cloneCart);
+    setLocalStorage(cloneCart);
   }
 
   return (
