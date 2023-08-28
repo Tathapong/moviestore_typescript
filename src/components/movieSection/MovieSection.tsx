@@ -19,7 +19,11 @@ function MovieSection() {
     <Box py={2} px={10} overflow={"auto"} display={"flex"} flexDirection={"column"} gap={2}>
       {context.mode === Mode.SEARCH ? <SearchInput /> : ""}
       {context.mode === Mode.CHECKOUT ? (
-        <Checkout />
+        context.cart.length ? (
+          <Checkout />
+        ) : (
+          ""
+        )
       ) : (
         <>
           <Pagination

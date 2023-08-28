@@ -1,6 +1,8 @@
-import { Box, Grid, Typography, IconButton, Container, List, ListItem, Button } from "@mui/material";
+import { useState } from "react";
+import { Box, Grid, Typography, IconButton, Container, List, ListItem, Button, Modal } from "@mui/material";
 import { Mode } from "../../constants/mode";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import Payment from "./Payment";
 
 import useAllContext from "../../contexts/useAllContext";
 import { setLocalStorage } from "../../utilities/localStorage";
@@ -9,6 +11,12 @@ const noImage =
   "https://st4.depositphotos.com/14953852/24787/v/450/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg";
 
 function Checkout() {
+  const [openPayment, setOpenPayment] = useState(false);
+  const [paymentStart, setPaymentStart] = useState<number>(0);
+  const [paymentStop, setPaymentStop] = useState<number>(0);
+
+  const context = useAllContext();
+
   function onClickRemoveFromCart(id: number) {
     const cloneCart = [...context.cart];
     const idx = cloneCart.findIndex((item) => item.id === id);
@@ -25,7 +33,17 @@ function Checkout() {
     context.setMode(Mode.NOW_PLAYING);
   }
 
-  const context = useAllContext();
+  function onClickCheckout() {
+    setOpenPayment(true);
+    setPaymentStart(new Date().getTime());
+    setPaymentStop(new Date().getTime());
+  }
+
+  function onClosePayment() {
+    setOpenPayment(false);
+    setPaymentStart(0);
+    setPaymentStop(0);
+  }
 
   return (
     <Container maxWidth={"md"}>
@@ -103,10 +121,13 @@ function Checkout() {
         <Button variant="contained" onClick={onClickGotoShop}>
           Continue Shopping
         </Button>
-        <Button variant="contained" color="success">
+        <Button variant="contained" color="success" onClick={onClickCheckout}>
           Checkout Now
         </Button>
       </Box>
+      <Modal open={openPayment} onClose={onClosePayment}>
+        <Payment paymentStart={paymentStart} paymentStop={paymentStop} />
+      </Modal>
     </Container>
   );
 }

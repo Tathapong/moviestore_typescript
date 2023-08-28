@@ -31,6 +31,9 @@ interface ContextPropsType {
 
   pageCount: number;
   setPageCount: SetStateType<number>;
+
+  timer: number;
+  setTimer: SetStateType<number>;
 }
 
 export const Context = createContext<ContextPropsType | null>(null);
@@ -45,6 +48,8 @@ function ContextProvider({ children }: ChildrenPropsType) {
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(1);
+
+  const [timer, setTimer] = useState<number>(5);
 
   useEffect(() => {
     const cached = getLocalStorage();
@@ -132,7 +137,9 @@ function ContextProvider({ children }: ChildrenPropsType) {
         page,
         setPage,
         pageCount,
-        setPageCount
+        setPageCount,
+        timer,
+        setTimer
       }}
     >
       {children}
