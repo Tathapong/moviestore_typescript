@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Grid, Typography, IconButton, Container, List, ListItem, Button, Modal } from "@mui/material";
 import { Mode } from "../../constants/mode";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
@@ -14,8 +14,19 @@ function Checkout() {
   const [openPayment, setOpenPayment] = useState(false);
   const [paymentStart, setPaymentStart] = useState<number>(0);
   const [paymentStop, setPaymentStop] = useState<number>(0);
+  const [intervalId, setIntervalId] = useState<number>(0);
 
   const context = useAllContext();
+
+  useEffect(() => {
+    if (intervalId !== 0) {
+      if (Math.round((paymentStop - paymentStart) / 1000) >= context.timer) {
+        setIntervalId(0);
+        setOpenPayment(false);
+        clearInterval(intervalId);
+      }
+    }
+  }, [paymentStop]);
 
   function onClickRemoveFromCart(id: number) {
     const cloneCart = [...context.cart];
@@ -37,6 +48,12 @@ function Checkout() {
     setOpenPayment(true);
     setPaymentStart(new Date().getTime());
     setPaymentStop(new Date().getTime());
+    setIntervalId(
+      setInterval(() => {
+        setPaymentStop(new Date().getTime());
+        console.log("set");
+      }, 1000)
+    );
   }
 
   function onClosePayment() {

@@ -49,7 +49,7 @@ function ContextProvider({ children }: ChildrenPropsType) {
   const [page, setPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(1);
 
-  const [timer, setTimer] = useState<number>(5);
+  const [timer, setTimer] = useState<number>(10);
 
   useEffect(() => {
     const cached = getLocalStorage();
